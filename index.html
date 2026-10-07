@@ -11,7 +11,24 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Name Mixer</title>
+<title>Baby Name Generator – Blend Mom & Dad's Names, Find by Meaning, Rashi | Name Mixer</title>
+<meta name="description" content="Free baby name generator: blend mom's and dad's names, or find baby names by meaning, language, rashi and number of letters. Shortlist favourites and share them.">
+<meta name="keywords" content="baby names, baby name generator, blend parents names, baby names with meaning, rashi baby names, Indian baby names, boy names, girl names">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<link rel="canonical" href="https://babynames.website/">
+<meta name="theme-color" content="#e8478b">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Name Mixer">
+<meta property="og:title" content="For the cute little one – Baby Name Generator">
+<meta property="og:description" content="Blend mom's and dad's names or find baby names by meaning, language and rashi. Shortlist and share your favourites.">
+<meta property="og:url" content="https://babynames.website/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="For the cute little one – Baby Name Generator">
+<meta name="twitter:description" content="Blend mom's and dad's names or find baby names by meaning, language and rashi.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Name Mixer","url":"https://babynames.website/","description":"Baby name generator that blends parents' names and finds names by meaning, language, rashi and length.","applicationCategory":"LifestyleApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #ffffff; --card: #ffffff; --text: #2b2230; --muted: #7d7285;
@@ -36,6 +53,10 @@
   .congrats b { font-size: 1.05rem; }
   .congrats > div > div { font-size: .85rem; opacity: .95; margin-top: 2px; }
   .cg-ic { font-size: 1.7rem; }
+  .congrats { padding: 9px 14px; margin-bottom: 12px; border-radius: 14px; }
+  .congrats b { font-size: .95rem; }
+  #cgSub { display: none; }
+  .cg-ic { font-size: 1.2rem; }
   .chip .rashi { font-size: .75rem; margin-top: 4px; color: var(--m); }
   .chip .rashi.none { color: var(--muted); }
   h1 { margin: 0 0 4px; font-size: 1.9rem; }
@@ -78,6 +99,12 @@
   details.filters summary::-webkit-details-marker { display: none; }
   details.filters summary::before { content: "▸ "; color: var(--muted); }
   details.filters[open] summary::before { content: "▾ "; }
+  details.filters summary { padding: 4px 0; }
+  details.filters > .fgrid { margin-top: 10px; }
+  .cnt { display: inline-block; margin-left: 6px; padding: 0 8px; border-radius: 999px; background: var(--accent); color: #fff; font-size: .68rem; font-weight: 600; line-height: 1.6; vertical-align: 1px; }
+  .cnt:empty { display: none; }
+  .panel:has(> details.filters:not([open])) { padding-top: 8px; padding-bottom: 8px; }
+  .lead { font-size: .8rem; color: var(--muted); text-align: center; margin: -4px 0 12px; line-height: 1.35; }
   .fgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-top: 14px; }
   .fgrid .wide { grid-column: 1 / -1; }
   .hint { font-size: .75rem; color: var(--muted); margin-top: 3px; }
@@ -88,6 +115,9 @@
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(330px, 100%), 1fr)); gap: 10px; }
   .chip { background: color-mix(in srgb, var(--card) 38%, transparent); -webkit-backdrop-filter: blur(14px) saturate(1.4); backdrop-filter: blur(14px) saturate(1.4); box-shadow: 0 6px 20px rgba(80,60,140,.12), inset 0 1px 0 rgba(255,255,255,.45); border: 1px solid var(--border); border-radius: 14px; padding: 10px; text-align: left; position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr); gap: 10px; touch-action: pan-y; user-select: none; -webkit-user-select: none; }
   .chip .cl { min-width: 0; }
+  .chip.nopv { grid-template-columns: minmax(0, 1fr); }
+  .chip.nopv .nmrow { padding-right: 30px; }
+  .tip { font-size: .78rem; color: var(--muted); margin: 2px 2px 10px; line-height: 1.35; }
   .chip .nmrow { display: flex; align-items: flex-start; gap: 6px; }
   .chip .cr { min-width: 0; display: flex; flex-direction: column; gap: 4px; justify-content: center; }
   .thumb { border-radius: 8px; overflow: hidden; cursor: pointer; border: 1px solid var(--border); }
@@ -114,7 +144,7 @@
   .uq b { color: var(--uc); font-weight: 600; }
   .u4 { --uc: #16a34a; } .u3 { --uc: #65a30d; } .u2 { --uc: #d97706; } .u1 { --uc: #dc2626; }
   .pv { margin-top: 8px; padding: 5px 10px; font-size: .78rem; border-radius: 8px; }
-  .modal { position: fixed; inset: 0; background: rgba(10,8,14,.72); z-index: 10; overflow: auto; padding: 14px; }
+  .modal { position: fixed; inset: 0; background: rgba(10,8,14,.72); z-index: 80; overflow: auto; padding: 14px; }
   .modal[hidden] { display: none; }
   .mbox { max-width: 920px; margin: 0 auto; background: var(--bg); border: 1px solid var(--border); border-radius: 16px; padding: 16px; }
   .mhead { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
@@ -140,7 +170,66 @@
   .browse button small { color: var(--muted); }
   .empty { color: var(--muted); text-align: center; padding: 26px 0; }
   .note { font-size: .78rem; color: var(--muted); margin-top: 30px; text-align: center; }
-  .toast { position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%); background: var(--text); color: var(--bg); padding: 9px 16px; border-radius: 20px; opacity: 0; transition: opacity .2s; pointer-events: none; z-index: 5; }
+
+  /* ---- guided naming (pop-up flow) ---- */
+  #wiz { --wbg: linear-gradient(165deg, #ffe3ec 0%, #efe7ff 48%, #dff1ff 100%); --wcard: rgba(255,255,255,.88); --winp: rgba(255,255,255,.9); --wink: #2b2230; --wmut: #7d7285; --wline: rgba(139,92,246,.25); --wgrad: linear-gradient(120deg, #ff7aa2 0%, #9b7bff 62%, #6cb2f2 100%);
+    position: fixed; inset: 0; z-index: 70; display: flex; align-items: center; justify-content: center; padding: 14px; background: var(--wbg); color: var(--wink); overflow: hidden;
+    font-family: "Fredoka", "Nunito", ui-rounded, system-ui, -apple-system, "Segoe UI", sans-serif; }
+  @media (prefers-color-scheme: dark) { #wiz { --wbg: linear-gradient(165deg, #2b1733 0%, #1d1a3a 50%, #13263b 100%); --wcard: rgba(34,28,45,.9); --winp: rgba(20,16,28,.7); --wink: #f5eefa; --wmut: #b3a5c0; --wline: rgba(167,139,250,.35); } }
+  #wiz[hidden] { display: none; }
+  #wiz * { box-sizing: border-box; }
+  #wiz .wfl { position: absolute; font-size: 1.7rem; opacity: .55; pointer-events: none; user-select: none; animation: wFloat 9s ease-in-out infinite; }
+  #wiz .wconf { position: absolute; top: -16px; width: 8px; height: 14px; border-radius: 2px; pointer-events: none; animation: wFall linear forwards; }
+  #wiz .wcard { position: relative; z-index: 1; width: 100%; max-width: 440px; max-height: calc(100vh - 28px); max-height: calc(100dvh - 28px); display: flex; flex-direction: column; padding: 16px 20px 18px; text-align: center;
+    background: var(--wcard); -webkit-backdrop-filter: blur(18px) saturate(1.3); backdrop-filter: blur(18px) saturate(1.3); border: 1.5px solid var(--wline); border-radius: 30px; box-shadow: 0 30px 70px rgba(120,80,200,.28); animation: wPop .45s cubic-bezier(.2,.9,.3,1.15); }
+  #wiz .wcard.res { max-width: 680px; }
+  #wiz .wtop { display: flex; align-items: center; justify-content: space-between; min-height: 30px; }
+  #wiz .wdots { display: flex; gap: 6px; align-items: center; }
+  #wiz .wdot { width: 8px; height: 8px; border-radius: 6px; background: var(--wline); transition: all .25s; }
+  #wiz .wdot.on { width: 24px; background: linear-gradient(90deg, #ff7aa2, #9b7bff); }
+  #wiz .wskip { background: none !important; border: none !important; color: var(--wmut); font: inherit; font-size: .85rem; padding: 6px 8px !important; cursor: pointer; }
+  #wiz .wstep { display: none; min-height: 0; flex-direction: column; flex: 1; }
+  #wiz .wstep.on { display: flex; animation: wSlide .35s ease-out; }
+  #wiz .wbody { overflow-y: auto; min-height: 0; flex: 1; padding: 2px 2px 4px; }
+  #wiz .wbig { font-size: 3.6rem; line-height: 1; margin: 10px 0 4px; animation: wBounce 2.4s ease-in-out infinite; }
+  #wiz .wh { margin: 8px 0 6px; font-size: 1.85rem; line-height: 1.12; font-weight: 600; background: var(--wgrad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  #wiz .wh.sm { font-size: 1.45rem; }
+  #wiz .wp { margin: 0 0 16px; color: var(--wmut); font-size: 1rem; line-height: 1.4; }
+  #wiz .wp.small { font-size: .85rem; margin-bottom: 8px; }
+  #wiz .wrow2 { display: grid; grid-template-columns: 1fr auto 1fr; gap: 8px; align-items: end; text-align: left; }
+  #wiz .wplus { font-size: 1.6rem; font-weight: 600; color: var(--m); padding-bottom: 8px; }
+  #wiz label { display: block; font-size: .78rem; color: var(--wmut); text-align: left; }
+  #wiz input[type=text] { display: block; width: 100%; margin-top: 4px; padding: 13px 14px; font: inherit; font-size: 1.1rem; color: var(--wink); background: var(--winp); border: 2px solid var(--wline); border-radius: 16px; outline: none; }
+  #wiz input[type=text]:focus { border-color: #9b7bff; box-shadow: 0 0 0 4px rgba(155,123,255,.18); }
+  #wiz .wfam { margin-top: 10px; }
+  #wiz .wchips { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 14px; }
+  #wiz .wchips button, #wiz .wl { font: inherit; color: var(--wink); background: var(--winp); border: 1.5px solid var(--wline); border-radius: 999px; padding: 8px 14px; cursor: pointer; transition: transform .15s; }
+  #wiz .wchips button:active, #wiz .wl:active { transform: scale(.96); }
+  #wiz .wchips button.on, #wiz .wl.on { color: #fff; background: var(--wgrad); border-color: transparent; font-weight: 600; }
+  #wiz .wpeek { min-height: 78px; margin: 14px 0 12px; padding: 10px; display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; align-content: center; border: 1.5px dashed var(--wline); border-radius: 20px; }
+  #wiz .wph { color: var(--wmut); font-size: .9rem; }
+  #wiz .wpk { padding: 6px 13px; font-size: 1.05rem; font-weight: 600; background: var(--winp); border: 1.5px solid var(--wline); border-radius: 999px; animation: wPop .4s both; animation-delay: calc(var(--i) * 70ms); }
+  #wiz .wpk .pa { color: #e0567a; } #wiz .wpk .pb { color: #3b82c4; } #wiz .wpk .pm { color: #8b5cf6; } #wiz .wpk .pt { color: #1f9d6b; }
+  #wiz .wgo { width: 100%; margin-top: 6px; padding: 14px 18px; font: inherit; font-size: 1.05rem; font-weight: 600; color: #fff; background: var(--wgrad) !important; border: none !important; border-radius: 999px; cursor: pointer; box-shadow: 0 10px 22px rgba(155,123,255,.38); transition: transform .15s, opacity .2s; }
+  #wiz .wgo:active { transform: scale(.98); }
+  #wiz .wgo:disabled { opacity: .45; box-shadow: none; cursor: not-allowed; }
+  #wiz .wlink { background: none !important; border: none !important; font: inherit; font-size: .88rem; color: var(--wmut); text-decoration: underline; padding: 8px 10px !important; cursor: pointer; }
+  #wiz .wlens { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 4px 0 14px; }
+  #wiz .wl { display: flex; flex-direction: column; align-items: center; gap: 1px; min-width: 72px; padding: 9px 12px; border-radius: 18px; }
+  #wiz .wl b { font-size: 1.4rem; line-height: 1.1; }
+  #wiz .wl small { font-size: .68rem; opacity: .75; }
+  #wiz .wlist { overflow-y: auto; flex: 1; min-height: 0; margin: 0 -8px; padding: 4px 8px 8px; text-align: left; }
+  #wiz .wlist .empty { text-align: center; color: var(--wmut); padding: 24px 8px; }
+  #wiz .wfoot { display: flex; gap: 8px; align-items: center; justify-content: space-between; margin-top: 8px; }
+  #wiz .wfoot .wgo { width: auto; flex: 1; margin: 0; }
+  #wizOpen { font-size: .85rem; padding: 7px 12px; border-radius: 10px; }
+  @keyframes wFloat { 0%, 100% { transform: translateY(0) rotate(-6deg); } 50% { transform: translateY(-22px) rotate(8deg); } }
+  @keyframes wFall { to { transform: translateY(110vh) rotate(540deg); opacity: .9; } }
+  @keyframes wPop { from { opacity: 0; transform: translateY(14px) scale(.94); } to { opacity: 1; transform: none; } }
+  @keyframes wSlide { from { opacity: 0; transform: translateX(18px); } to { opacity: 1; transform: none; } }
+  @keyframes wBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+  @media (prefers-reduced-motion: reduce) { #wiz *, #wiz .wcard { animation: none !important; } }
+  .toast { position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%); background: var(--text); color: var(--bg); padding: 9px 16px; border-radius: 20px; opacity: 0; transition: opacity .2s; pointer-events: none; z-index: 90; }
   .toast.show { opacity: 1; }
   @media (max-width: 640px) { .inputs, .inputs2 { grid-template-columns: 1fr; } .plus { margin: 0; justify-self: center; } }
 
@@ -149,20 +238,34 @@
   .seg button + button { border-left: 1.5px solid color-mix(in srgb, var(--accent) 55%, var(--border)); }
   .viewbar { border: 1.5px solid color-mix(in srgb, var(--accent) 35%, var(--border)); border-radius: 14px; padding: 8px 10px; background: color-mix(in srgb, var(--card) 38%, transparent); -webkit-backdrop-filter: blur(14px) saturate(1.4); backdrop-filter: blur(14px) saturate(1.4); }
   .best .chip { border: 2px solid var(--accent); }
+
+  /* festive theme */
+  :root { --bg: #fff8f1; --card: #ffffff; --border: #f6d9e4; --accent: #e8478b; --text: #3a2440; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #1d1426; --card: #281b33; --border: #4a2d55; --accent: #ff6fa8; } }
+  body { background: var(--bg) radial-gradient(circle at 8% 0%, rgba(255,196,77,.28), transparent 35%), radial-gradient(circle at 95% 10%, rgba(236,72,153,.18), transparent 38%), radial-gradient(circle at 50% 100%, rgba(59,130,246,.14), transparent 45%) fixed; }
+  body::before { opacity: .07 !important; }
+  .wrap::before { content: ""; display: block; height: 8px; border-radius: 8px; margin-bottom: 14px; background: repeating-linear-gradient(90deg,#ff5d8f 0 40px,#ffc44d 40px 80px,#3bb4a0 80px 120px,#5b8def 120px 160px,#a66cff 160px 200px); }
+  .panel { background: var(--card); border-radius: 18px; box-shadow: 0 6px 20px rgba(232,71,139,.10); }
+  .chip { border-radius: 16px; background: var(--card); box-shadow: 0 3px 12px rgba(255,140,60,.12); transition: transform .15s, box-shadow .15s; }
+  .chip:hover { transform: translateY(-2px) rotate(-.4deg); box-shadow: 0 8px 20px rgba(232,71,139,.2); }
+  button.primary, .seg button.active, .cnt { background: linear-gradient(120deg,#ff5d8f,#ff9a3c); border-color: transparent; }
+  .seg button.active { color: #fff; }
+  .wrap h1, .wrap > #results h2 { background: linear-gradient(90deg,#e8478b,#ff9a3c,#a66cff); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .tip { background: #fff3c9; color: #6b4a00; border: 1.5px dashed #ffc44d; border-radius: 12px; padding: 8px 12px; }
+  @media (prefers-color-scheme: dark) { .tip { background: #3a2d12; color: #ffd98a; } }
+
+  .hero { text-align: center; margin: 4px 0 16px; }
+  .hero h1 { margin: 0; font-family: "Fredoka", system-ui, sans-serif; font-weight: 600; font-size: clamp(1.25rem, 5.6vw, 2.2rem); line-height: 1.2; background: linear-gradient(90deg,#e8478b,#ff9a3c,#a66cff); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero p { margin: 4px 0 0; color: var(--muted); font-size: .95rem; }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="congrats">
-    <span class="cg-ic">🎉</span>
-    <div><b id="cgTitle">Congratulations on your growing family!</b><div id="cgSub">Wishing you endless joy as you choose the perfect name for your little one. 💛</div></div>
-    <span class="cg-ic">🎊</span>
-  </div>
-
+  <header class="hero"><h1>🍼 For the cute little one 🧸</h1><p>Find a name as special as they are</p></header>
   <div class="panel">
     <div class="seg" id="modeSeg" style="margin-bottom:12px">
-      <button data-m="blend" class="active"><span class="tl">🔀 Make Names</span><small>by blending your and your spouse’s names</small></button>
-      <button data-m="explore"><span class="tl">✨ Get Names</span><small>get suggestions by giving your choices</small></button>
+      <button data-m="blend" class="active"><span class="tl">💞 Blend Names</span><small>mix yours and your spouse’s names</small></button>
+      <button data-m="explore"><span class="tl">🔎 Find Names</span><small>find by meaning, language, rashi or letters</small></button>
     </div>
     <div style="margin-bottom:14px">
       <div class="seg" id="genderSeg">
@@ -170,6 +273,7 @@
         <button data-g="f">👧 Baby girl</button>
       </div>
     </div>
+    <div class="lead" id="lead">Enter your name and your spouse’s name — we’ll blend them into baby name ideas.</div>
     <div class="inputs" id="namesRow">
       <div id="wrapA">
         <label class="l" for="nameA">First name</label><input id="nameA" type="text" placeholder="e.g. Rohan" autocomplete="off">
@@ -188,7 +292,8 @@
   </div>
 
   <div class="panel">
-    <div style="font-weight:600">Meaning &amp; language</div>
+    <details class="filters" id="meanBox">
+    <summary>Meaning &amp; language <span class="cnt" id="meanCnt"></span></summary>
     <div class="fgrid">
         <div class="wide"><label class="l" for="theme">Based on</label><select id="theme"><option value="">None</option></select></div>
         <div class="wide opwrap"><button type="button" class="opchip" id="op1" data-v="or" title="Tap to switch between OR and AND">OR</button></div>
@@ -201,11 +306,12 @@
         <div class="wide"><label class="l" for="rashi">Rashi (moon sign)</label><select id="rashi"><option value="">None</option></select></div>
         <div class="wide hint" id="rashiInfo"></div>
     </div>
+    </details>
   </div>
 
   <div class="panel">
-    <details class="filters" open>
-      <summary>Filters &amp; options</summary>
+    <details class="filters" id="filtBox">
+      <summary>Filters &amp; options <span class="cnt" id="filtCnt"></span></summary>
       <div class="fgrid">
         <div><label class="l" for="startsWith">Starts with</label><input id="startsWith" type="text" placeholder="e.g. R" autocomplete="off"></div>
         <div><label class="l" for="endsWith">Ends with</label><input id="endsWith" type="text" placeholder="e.g. an" autocomplete="off"></div>
@@ -245,6 +351,7 @@
       <button data-v="fav">★ Shortlist (<span id="favCount">0</span>)</button>
     </div>
     <span class="spacer"></span>
+    <button type="button" id="wizOpen" title="Open guided naming">✨ Guided</button>
     <select id="favSort" class="favonly" style="width:auto" title="Sort the shortlist">
       <option value="added">Order added</option>
       <option value="short">Fewest letters first</option>
@@ -254,6 +361,54 @@
     </select>
   </div>
   <div id="out"></div>
+</div>
+<div id="wiz" hidden role="dialog" aria-modal="true" aria-label="Guided baby naming">
+  <div class="wcard" id="wCard">
+    <div class="wtop"><div class="wdots" id="wDots"><i class="wdot on"></i><i class="wdot"></i><i class="wdot"></i><i class="wdot"></i></div><button type="button" class="wskip" data-skip>Skip ✕</button></div>
+
+    <div class="wstep on" data-s="1">
+      <div class="wbody">
+        <div class="wbig">🎉👶🍼</div>
+        <h2 class="wh">Congratulations,<br>new Mom &amp; Dad!</h2>
+        <p class="wp">Welcome to the best adventure of your life.<br>Let’s name the little one.</p>
+      </div>
+      <button type="button" class="wgo" data-next>Let’s begin →</button>
+    </div>
+
+    <div class="wstep" data-s="2">
+      <div class="wbody">
+        <h2 class="wh sm">Dad’s name + Mom’s name</h2>
+        <p class="wp">Type both names and watch baby name ideas appear.</p>
+        <div class="wrow2">
+          <label>Dad’s name<input class="w-dad" type="text" placeholder="e.g. Rohan" autocomplete="off" autocapitalize="words"></label>
+          <span class="wplus">+</span>
+          <label>Mom’s name<input class="w-mom" type="text" placeholder="e.g. Anika" autocomplete="off" autocapitalize="words"></label>
+        </div>
+        <div class="wchips" id="wGender"><button type="button" data-g="m">👦 Boy</button><button type="button" data-g="f">👧 Girl</button><button type="button" data-g="" class="on">🎀 Either</button></div>
+        <label class="wfam">Family name (optional)<input class="w-fam" type="text" placeholder="e.g. Sharma" autocomplete="off" autocapitalize="words"></label>
+        <div class="wpeek" id="wPeek" aria-live="polite"><span class="wph">Names will appear here ✨</span></div>
+      </div>
+      <button type="button" class="wgo" data-next disabled>Next → pick letters</button>
+      <div><button type="button" class="wlink" data-example>Try an example</button></div>
+    </div>
+
+    <div class="wstep" data-s="3">
+      <div class="wbody">
+        <h2 class="wh sm">How many letters?</h2>
+        <p class="wp">Pick one or more — or leave it open for every length.</p>
+        <div class="wlens" id="wLens"></div>
+      </div>
+      <button type="button" class="wgo" data-next>Show my names ✨</button>
+      <div><button type="button" class="wlink" data-back>← Back</button></div>
+    </div>
+
+    <div class="wstep" data-s="4">
+      <h2 class="wh sm" id="wResHead">✨ Names for you</h2>
+      <p class="wp small">Tap ★ on the ones you love — shortlisted names show how they’ll look on a T-shirt, certificate and more.</p>
+      <div class="wlist" id="wList"></div>
+      <div class="wfoot"><button type="button" class="wlink" data-back>← Letters</button><button type="button" class="wgo" id="wHome">Skip to home page →</button></div>
+    </div>
+  </div>
 </div>
 <div class="modal" id="modal" hidden>
   <div class="mbox">
@@ -900,18 +1055,20 @@ function chip(r, ctx, extraClass) {
   const uq = u.near && u.d <= 1 ? `<div class="meta">sounds like ${cap(u.near)}</div>` : "";
   const mTxt = meaningOf(r, ctx), via = mTxt && (ctx.showMeaning || mTxt === "New invented") ? `<div class="via">${mTxt === "New invented" ? "✨ " : "📖 "}${mTxt}</div>` : "";
   const warn = r.warn ? `<div class="warn">⚠ ${r.warn}</div>` : "";
-  const sc = sceneFor(r.name, ctx);
+  const showPv = view === "fav" || favs.includes(r.name);
+  const sc = showPv ? sceneFor(r.name, ctx) : null;
   const xTitle = view === "fav" ? "Remove from shortlist" : "Dismiss this name";
-  return `<div class="chip ${extraClass || ""}" data-n="${r.name}">
+  const pv = showPv ? `
+    <div class="cr">
+      <div class="thumb" data-pv="${r.name}" title="Tap for all previews">${sc.svg}</div>
+      <div class="pvcap"><span>${sc.title}</span><button data-cycle="${r.name}" title="Show another preview">↻</button></div>
+    </div>` : "";
+  return `<div class="chip ${showPv ? "" : "nopv"} ${extraClass || ""}" data-n="${r.name}">
     <button class="x" data-x="${r.name}" title="${xTitle}" aria-label="${xTitle}">✕</button>
     <div class="cl">
       <div class="nmrow"><div class="nm" title="Tap to copy">${partsHTML(r)}</div><button class="shr" data-share="${r.name}" title="Share this name" aria-label="Share ${r.name}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg></button><button class="star ${on}" data-f="${r.name}" title="Save to shortlist">★</button></div>
       ${full}${nick}${ctx.showRashi && !ctx.rashi.length ? rashiHTML(r.name) : ""}${uq}${via}<div class="meta">${r.name.length} letters · <span title="${gTitle(r.gender)}">${gIcon(r.gender)}</span></div>${warn}
-    </div>
-    <div class="cr">
-      <div class="thumb" data-pv="${r.name}" title="Tap for all previews">${sc.svg}</div>
-      <div class="pvcap"><span>${sc.title}</span><button data-cycle="${r.name}" title="Show another preview">↻</button></div>
-    </div>
+    </div>${pv}
   </div>`;
 }
 
@@ -930,6 +1087,13 @@ function removeCard(name) {
   render();
 }
 
+async function shareFavs(ctx) {
+  const text = "My baby name shortlist \ud83d\udc9b\n" + favs.map((n, i) => (i + 1) + ". " + fullName(n, ctx)).join("\n") + "\nhttps://babynames.website";
+  const log = result => { try { window.nmTrack && window.nmTrack("shortlist_share", { count: favs.length, result }); } catch (_) {} };
+  try { if (navigator.share) { await navigator.share({ title: "My baby name shortlist", text }); log("shared"); return; } }
+  catch (err) { if (err && err.name === "AbortError") { log("cancelled"); return; } }
+  copy(text); log("copied");
+}
 function renderFavView(ctx) {
   const how = $("favSort").value;
   const items = favs.map(n => favRec(n, ctx));
@@ -938,13 +1102,14 @@ function renderFavView(ctx) {
   if (how === "uniq") items.sort((x, y) => uniq(y.name).score - uniq(x.name).score);
   if (how === "az") items.sort((x, y) => x.name.localeCompare(y.name));
   let html = `<h2>★ Your shortlist <small>(${items.length}) — swipe a card away or tap ✕ to narrow it down</small></h2>`;
-  if (!items.length) html += '<div class="empty">Nothing here yet. In “All ideas”, tap ★ on the names you like.</div>';
+  if (!items.length) html += '<div class="empty">Nothing here yet. In “All ideas”, tap ★ on the names you like — shortlisted names show on a T-shirt, certificate, name tag and more.</div>';
   else {
     if (items.length === 1) html += '<div class="dbar">🎉 Only one left — that’s your final pick!</div>';
     html += '<div class="grid">' + items.map(r => chip(r, ctx)).join("") + "</div>" +
-      '<div class="row"><button id="copyFavs">Copy list</button><button id="clearFavs">Clear all</button></div>';
+      '<div class="row"><button id="shareFavs">Share list</button><button id="copyFavs">Copy list</button><button id="clearFavs">Clear all</button></div>';
   }
   $("out").innerHTML = html;
+  const sf = $("shareFavs"); if (sf) sf.onclick = () => shareFavs(ctx);
   const cf = $("copyFavs"); if (cf) cf.onclick = () => copy(favs.map(n => fullName(n, ctx)).join(", "));
   const cl = $("clearFavs"); if (cl) cl.onclick = () => { favs = []; saveFavs(); render(); };
 }
@@ -952,8 +1117,10 @@ function renderFavView(ctx) {
 function render() {
   $("maxLenVal").textContent = +$("maxLen").value < 15 ? $("maxLen").value : "any";
   $("favCount").textContent = favs.length;
+  const nMean = ["theme", "trait", "mWord", "rashi"].filter(id => $(id).value.trim()).length + ($("mLang").value !== "all" ? 1 : 0);
+  const nFilt = ["startsWith", "endsWith", "rhyme"].filter(id => $(id).value.trim()).length + ($("nodict").checked ? 1 : 0) + ($("nice").checked ? 0 : 1);
+  $("meanCnt").textContent = nMean ? nMean + " selected" : ""; $("filtCnt").textContent = nFilt ? nFilt + " on" : "";
   const ctx = readCtx(); lastCtx = ctx;
-  $("cgTitle").textContent = ctx.lastRaw ? "Congratulations to the " + ctx.lastRaw + " family!" : "Congratulations on your growing family!";
   $("mStatus").textContent = ctx.mean.msg;
   $("rashiInfo").textContent = ctx.rashiRec
     ? ctx.rashiRec[2] + ": names usually begin with " + ctx.rashi.map(cap).join(", ") + ". Letters follow the common Vedic chart — confirm with your pandit or astrologer."
@@ -963,7 +1130,7 @@ function render() {
   let html = "";
   const blendMode = ctx.mode === "blend";
   if (blendMode && (ctx.a.length < 2 || ctx.b.length < 2)) {
-    html += '<div class="empty">Enter two names (at least 2 letters each) to see blends — or switch to “Get Names” if you don’t want to combine names.</div>';
+    html += '<div class="empty">Enter two names (at least 2 letters each) to see blends — or switch to “Find Names” if you don’t want to combine names.</div>';
   } else {
     const pool = !blendMode ? explorePool(ctx) : ctx.recipeOn ? genRecipe(ctx) : gen(ctx.a, ctx.b, "a", "b");
     const all = pool.map(r => decorate(r, ctx, ctx.a, ctx.b));
@@ -973,6 +1140,7 @@ function render() {
     ctx.skipBlock = false;
     const byScore = main.slice().sort((x, y) => y.score - x.score);
     const list = main.slice().sort(sorter(ctx.sort));
+    html += '<div class="tip">⭐ Tap ★ to shortlist a name — shortlisted names show how they look on a T-shirt, certificate, name tag and more.</div>';
     if (byScore.length) html += '<h2>✨ Top picks</h2><div class="best">' + byScore.slice(0, 6).sort((x, y) => x.name.length - y.name.length || y.score - x.score).map(r => chip(r, ctx)).join("") + "</div>";
     html += `<h2>${blendMode ? (ctx.recipeOn ? "From your letter recipe" : "All combinations") : "Name ideas"} <small>(${list.length})${hidden ? " · " + hidden + " hidden by the safety screen" : ""}</small></h2>`;
     if (dismissed.size) html += `<div class="dbar">${dismissed.size} dismissed · <button id="undoDis">↩ Undo last</button> <button id="restoreDis">Restore all</button></div>`;
@@ -1040,7 +1208,7 @@ function buildShareImage(card) {
     card.querySelectorAll(".meta").forEach(m => add(m.textContent.replace(/\s+/g, " ").trim(), 32, "#6b6b7b"));
     add(txt(".via"), 36, "#1f1f2e", 500, 18);
     add(txt(".warn"), 32, "#d9730d");
-    const svg = card.querySelector(".thumb svg"), img = new Image();
+    const img = new Image();
     img.onload = () => {
       const m = document.createElement("canvas").getContext("2d");
       let h = 16 + 36 + SH + 56;
@@ -1076,7 +1244,8 @@ function buildShareImage(card) {
       cv.toBlob(b => b ? resolve(b) : reject(new Error("no blob")), "image/png");
     };
     img.onerror = () => reject(new Error("scene failed"));
-    let src = svg ? svg.outerHTML : "";
+    let src = "";
+    try { src = sceneFor(card.dataset.n, lastCtx).svg; } catch (_) {}
     if (!src) return reject(new Error("no scene"));
     if (!/xmlns=/.test(src)) src = src.replace("<svg ", '<svg xmlns="http://www.w3.org/2000/svg" ');
     src = src.replace("<svg ", '<svg width="800" height="480" ');
@@ -1322,6 +1491,7 @@ document.querySelectorAll("#genderSeg button").forEach(b => b.onclick = () => {
   update();
 });
 document.querySelectorAll("input, select").forEach(el => {
+  if (el.closest("#wiz")) return;
   el.addEventListener("input", update);
   if (el.type !== "text") el.addEventListener("change", update); /* text boxes already update on "input"; a second redraw on blur swallowed the first tap on a card */
 });
@@ -1337,6 +1507,7 @@ $("reset").onclick = () => {
 };
 function setMode(m) {
   document.body.classList.toggle("explore", m === "explore");
+  $("lead").textContent = m === "explore" ? "Pick boy or girl, then add a meaning, language or rashi — we’ll suggest names to match." : "Enter your name and your spouse’s name — we’ll blend them into baby name ideas.";
   ["op1","op2","op3"].forEach(id => $(id).onclick = () => { const e = $(id), v = e.dataset.v === "or" ? "and" : "or"; e.dataset.v = v; e.textContent = v.toUpperCase(); update(); });
 document.querySelectorAll("#modeSeg button").forEach(b => b.classList.toggle("active", b.dataset.m === m));
   update();
@@ -1388,6 +1559,9 @@ document.querySelectorAll("#modeSeg button").forEach(b => b.onclick = () => setM
     const el = e.target.closest && e.target.closest("input, select"); if (el && el.id) markDirty();
   }, true);
 
+  /* opening / closing the collapsible sections */
+  document.addEventListener("toggle", e => { const d = e.target; if (d && d.tagName === "DETAILS" && d.id) track("panel_toggle", { panel: d.id, open: d.open ? 1 : 0 }); }, true);
+
   /* clicks (capture phase so we see state before the page's own handler changes it) */
   document.addEventListener("click", e => {
     const t = e.target; if (!t.closest) return;
@@ -1401,6 +1575,7 @@ document.querySelectorAll("#modeSeg button").forEach(b => b.onclick = () => setM
     if (t.closest("[data-say]")) { track("name_pronounce"); return; }
     if (t.closest(".chip .nm")) { track("name_copy", { source: "card" }); return; }
     if (t.closest("#mCopy")) { track("name_copy", { source: "preview" }); return; }
+    if (t.closest("#shareFavs")) return;
     if (t.closest("#copyFavs")) { track("shortlist_copy", { count: favs.length }); return; }
     if (t.closest("#clearFavs")) { track("shortlist_clear"); return; }
     if (t.closest("#more, #moreT")) { track("show_more"); return; }
@@ -1422,6 +1597,128 @@ document.querySelectorAll("#modeSeg button").forEach(b => b.onclick = () => setM
     const cur = visMs + (visSince ? Date.now() - visSince : 0);
     if (!engaged && cur >= 15000) { engaged = true; track("engaged_15s"); }
   }, 3000);
+})();
+
+/* ---- guided naming: pop-up flow shown when the page opens ---- */
+(function () {
+  const wiz = document.getElementById("wiz"); if (!wiz) return;
+  const q = sel => wiz.querySelector(sel), qa = sel => [...wiz.querySelectorAll(sel)];
+  const tr = (ev, p) => { try { window.nmTrack && window.nmTrack(ev, p); } catch (_) {} };
+  const dad = q(".w-dad"), mom = q(".w-mom"), fam = q(".w-fam"), peek = q("#wPeek");
+  let step = 1, gender = "", lens = new Set(), wShown = 24, peekTimer = null;
+  const valid = () => clean(dad.value).length >= 2 && clean(mom.value).length >= 2;
+
+  function apply() {
+    $("nameA").value = dad.value.trim(); $("nameB").value = mom.value.trim(); $("lastName").value = fam.value.trim();
+    document.querySelectorAll("#genderSeg button").forEach(x => x.classList.toggle("active", x.dataset.g === gender));
+    if (document.body.classList.contains("explore")) setMode("blend");
+  }
+  function names(filter) {
+    apply();
+    const ctx = readCtx();
+    if (ctx.a.length < 2 || ctx.b.length < 2) return { ctx, list: [] };
+    let list = gen(ctx.a, ctx.b, "a", "b").map(r => decorate(r, ctx, ctx.a, ctx.b)).filter(r => passes(r, ctx) && !dismissed.has(r.name));
+    if (filter && filter.size) list = list.filter(r => filter.has(r.name.length));
+    list.sort((x, y) => y.score - x.score);
+    return { ctx, list };
+  }
+
+  /* ---- confetti + floating baby things ---- */
+  ["🍼", "🧸", "⭐", "🎈", "👶", "🌙", "🎀", "🦄"].forEach((e, i) => {
+    const el = document.createElement("span"); el.className = "wfl"; el.textContent = e;
+    el.style.left = (6 + (i * 13) % 88) + "%"; el.style.top = (8 + (i * 29) % 80) + "%"; el.style.animationDelay = (-i * 1.1) + "s"; el.style.fontSize = (1.3 + (i % 3) * .45) + "rem";
+    wiz.insertBefore(el, wiz.firstChild);
+  });
+  function confetti() {
+    const cols = ["#ff7aa2", "#9b7bff", "#6cb2f2", "#ffd36b", "#5fd8a4"], made = [];
+    for (let i = 0; i < 30; i++) {
+      const c = document.createElement("i"); c.className = "wconf"; c.style.left = Math.random() * 100 + "%"; c.style.background = cols[i % cols.length];
+      c.style.animationDuration = (3 + Math.random() * 3) + "s"; c.style.animationDelay = (Math.random() * 1.6) + "s"; wiz.appendChild(c); made.push(c);
+    }
+    setTimeout(() => made.forEach(c => c.remove()), 8000);
+  }
+
+  /* ---- steps ---- */
+  function show(n) {
+    step = n;
+    qa(".wstep").forEach(x => x.classList.toggle("on", +x.dataset.s === n));
+    qa(".wdot").forEach((d, i) => d.classList.toggle("on", i < n));
+    q("#wCard").classList.toggle("res", n === 4);
+    if (n === 2) setTimeout(() => { try { (dad.value ? mom : dad).focus({ preventScroll: true }); } catch (_) {} }, 120);
+    tr("wiz_step", { step: n });
+  }
+  function paintPeek() {
+    if (!valid()) { peek.innerHTML = '<span class="wph">Names will appear here ✨</span>'; q('[data-s="2"] [data-next]').disabled = true; return; }
+    const { list } = names(null), ok = list.length > 0;
+    q('[data-s="2"] [data-next]').disabled = !ok;
+    peek.innerHTML = ok ? list.slice(0, 6).map((r, i) => `<span class="wpk" style="--i:${i}">${partsHTML(r)}</span>`).join("")
+      : '<span class="wph">Hmm, those names don’t blend well — try another spelling.</span>';
+  }
+  function paintLens() {
+    const { list } = names(null), cnt = {};
+    list.forEach(r => { cnt[r.name.length] = (cnt[r.name.length] || 0) + 1; });
+    const keys = Object.keys(cnt).map(Number).filter(n => n >= 3 && n <= 12).sort((a, b) => a - b);
+    lens = new Set([...lens].filter(n => cnt[n]));
+    q("#wLens").innerHTML = '<button type="button" class="wl ' + (lens.size ? "" : "on") + '" data-len="any"><b>Any</b><small>' + list.length + ' names</small></button>' +
+      keys.map(n => '<button type="button" class="wl ' + (lens.has(n) ? "on" : "") + '" data-len="' + n + '"><b>' + n + '</b><small>' + cnt[n] + ' names</small></button>').join("");
+  }
+  function paintResults() {
+    const { ctx, list } = names(lens), box = q("#wList"), top = box.scrollTop;
+    const lab = lens.size ? " with " + [...lens].sort((a, b) => a - b).join(" or ") + " letters" : "";
+    q("#wResHead").textContent = "✨ " + list.length + " names" + lab;
+    box.innerHTML = list.length ? '<div class="grid">' + list.slice(0, wShown).map(r => chip(r, ctx)).join("") + "</div>" +
+      (list.length > wShown ? '<div class="row" style="justify-content:center;margin-top:10px"><button type="button" id="wMore">Show more (' + (list.length - wShown) + ' left)</button></div>' : "")
+      : '<div class="empty">No names match. Go back and pick different letters.</div>';
+    box.scrollTop = top;
+    const n = favs.length; q("#wHome").textContent = n ? "Go to my shortlist (" + n + ") →" : "Skip to home page →";
+  }
+  window.wizRefresh = () => { if (!wiz.hidden && step === 4) paintResults(); };
+
+  function open(auto, from) {
+    wiz.hidden = false; document.documentElement.style.overflow = "hidden";
+    if (from === 2) { if (!dad.value) dad.value = $("nameA").value; if (!mom.value) mom.value = $("nameB").value; if (!fam.value) fam.value = $("lastName").value; show(2); paintPeek(); }
+    else { show(1); confetti(); }
+    tr("wiz_open", { auto: auto ? 1 : 0 });
+  }
+  function close(how) {
+    if (wiz.hidden) return;
+    wiz.hidden = true; document.documentElement.style.overflow = "";
+    tr(how === "done" ? "wiz_done" : "wiz_skip", { at_step: step, shortlisted: favs.length });
+    if (how === "done") {
+      apply(); update();
+      const target = favs.length ? "fav" : "all";
+      const b = document.querySelector('#viewSeg button[data-v="' + target + '"]'); if (b) b.click();
+    }
+    window.scrollTo(0, 0);
+  }
+
+  wiz.addEventListener("click", e => {
+    const t = e.target;
+    if (t.closest("[data-skip]")) return close("skip");
+    if (t.closest("[data-example]")) { dad.value = "Rohan"; mom.value = "Anika"; paintPeek(); return; }
+    const g = t.closest("#wGender button"); if (g) { gender = g.dataset.g; qa("#wGender button").forEach(x => x.classList.toggle("on", x === g)); if (valid()) paintPeek(); return; }
+    const L = t.closest("[data-len]"); if (L) { const v = L.dataset.len; if (v === "any") lens.clear(); else { const n = +v; lens.has(n) ? lens.delete(n) : lens.add(n); } paintLens(); return; }
+    if (t.closest("#wMore")) { wShown += 36; paintResults(); return; }
+    if (t.closest("#wHome")) return close("done");
+    if (t.closest("[data-back]")) { show(step - 1); if (step === 3) paintLens(); return; }
+    if (t.closest("[data-next]")) {
+      if (step === 1) return show(2);
+      if (step === 2) { if (!valid()) return; tr("wiz_blend", { gender: gender || "either", has_family: fam.value.trim() ? 1 : 0 }); show(3); paintLens(); return; }
+      if (step === 3) { wShown = 24; show(4); paintResults(); tr("wiz_results", { lengths: lens.size ? [...lens].sort((a, b) => a - b).join(",") : "any", count: names(lens).list.length }); return; }
+    }
+  });
+  [dad, mom, fam].forEach(el => {
+    el.addEventListener("input", () => { clearTimeout(peekTimer); peekTimer = setTimeout(paintPeek, 180); });
+    el.addEventListener("keydown", e => { if (e.key === "Enter" && valid()) { e.preventDefault(); q('[data-s="2"] [data-next]').click(); } });
+  });
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && !wiz.hidden) close("skip"); });
+
+  /* re-draw the pop-up list whenever the page state changes (star, dismiss, change preview) */
+  const _render = render; render = function () { _render(); if (window.wizRefresh) window.wizRefresh(); };
+  const wo = document.getElementById("wizOpen"); if (wo) wo.onclick = () => open(false, 2);
+
+  let seen = null; try { seen = sessionStorage.getItem("nm_wiz_seen"); } catch (_) {}
+  if (!seen && !favs.length) { try { sessionStorage.setItem("nm_wiz_seen", "1"); } catch (_) {} open(true, 1); }
 })();
 
 $("nameA").value = "Rohan"; $("nameB").value = "Anika";
